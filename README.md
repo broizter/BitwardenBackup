@@ -23,7 +23,7 @@ Required dependencies:
   
 ## Configuration
 
-1. Create the folder where you wan't your backups to end up.
+1. Create the folder where you want your backups to end up.
 
 2. Edit the values of the variables in the configuration section. Do not edit anything under "END OF CONFIGURATION" unless you know exactly what you're doing. 
 
