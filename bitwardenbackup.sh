@@ -11,7 +11,6 @@ BW_BINARY=/path/to/bitwarden-cli/bin
 # Variables used later in script. Not meant to be changed.
 SESSIONS=$($BW_BINARY unlock --raw $PASSWORD)
 PARENTS=$($BW_BINARY list items --session $SESSIONS --pretty | jq '.[] | select(.attachments)' | grep -o -P '(?<="id": ").*(?=",)' | sed -n -e '/-/{p;n;}')
-ITEMS=$($BW_BINARY list items --session $SESSIONS --pretty | /usr/bin/jq '..|.attachments?' | grep -o -P '(?<="id": ").*(?=",)')
 ATTACHFOLDER=$OUTPUTFOLDER/attachments/
 JSONFILE=$OUTPUTFOLDER/vault.json
 
