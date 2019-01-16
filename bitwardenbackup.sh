@@ -2,7 +2,7 @@
 
 ############### CONFIGURATION ####################
 
-PASSWORD=mypassword123
+PASSWORD=my-bitwarden-password
 OUTPUTFOLDER=/path/to/backup/destination
 BW_BINARY=/path/to/bitwarden-cli/bin
 
