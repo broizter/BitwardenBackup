@@ -9,6 +9,8 @@ This script is a product of me trying to find a solution for backing up the Bitw
 
 It currently does not handle versioning/encryption. Borg backup is an excellent tool that can handle both of these things better than I could write in a script.
 
+Pull requests are highly encouraged!
+
 
 ## Usage, Requirements
 
