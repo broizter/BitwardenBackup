@@ -8,7 +8,6 @@ BW_BINARY=/path/to/bitwarden-cli/bin
 
 ############ END OF CONFIGURATION ################
 
-
 # Check if the output directory exists
 if ! [ -d $OUTPUTFOLDER ]; then
         echo "Output folder doesn't exist." 1>&2
