@@ -18,15 +18,22 @@ Download the latest release from GitHub for a stable and tested version.
 
 Required dependencies:
  * **bw** for accessing your Bitwarden vault. It's Bitwarden's official CLI utility that can be downloaded from https://github.com/bitwarden/cli
- * **jq** for utility output parsing. For Debian based distributions it can be installed with 
-    
-    $ apt install jq
-       
+ * **jq** for parsing output so the script can find what to backup. If you run a Debian based distributions then it can be installed with  ```sudo apt install jq ```
+
 ## Configuration
 
 1. Create the folder where you want your backups to end up.
 
-2. Edit the values of the variables in the configuration section. Do not edit anything under "END OF CONFIGURATION" unless you know exactly what you're doing. 
+2. Edit the values of the variables in the configuration section. Do not edit anything under "END OF CONFIGURATION" unless you know exactly what you're doing. An example could be 
+```bash
+############### CONFIGURATION ####################
+
+PASSWORD=secretpassword123
+OUTPUTFOLDER=/mnt/bitwarden
+BW_BINARY=/usr/bin/bw
+
+############ END OF CONFIGURATION ################
+```
 
 ## License
 
