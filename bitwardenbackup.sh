@@ -20,6 +20,12 @@ if ! [ -f $BW_BINARY ]; then
         exit 1
 fi
 
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+        echo "The command jq could not be found. Make sure jq is installed before you use this script."
+        exit 1
+fi
+
 # Check if the user is logged into Bitwarden
 $BW_BINARY login --check > /dev/null || exit 1
 
