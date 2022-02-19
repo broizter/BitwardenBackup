@@ -27,7 +27,10 @@ if ! command -v jq &> /dev/null; then
 fi
 
 # Check if the user is logged into Bitwarden
-$BW_BINARY login --check > /dev/null || exit 1
+if ! $BW_BINARY login --check &> /dev/null; then
+        echo "You need to login to BitWarden before running this script."
+        exit 1
+fi
 
 # Variables used later in script. Not meant to be changed.
 SESSION=$($BW_BINARY unlock --raw $PASSWORD)
