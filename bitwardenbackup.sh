@@ -47,7 +47,10 @@ $BW_BINARY export $PASSWORD --format json --session $SESSION --output $JSONFILE 
 for P in $PARENTS; do
         ATTACH=$($BW_BINARY get item $P --session $SESSION | jq -r .attachments[].id)
         for A in $ATTACH; do
-                $BW_BINARY get attachment $A --itemid $P --session $SESSION --output $ATTACHFOLDER || EXIT=$?
+                SAVED_FILE=$($BW_BINARY get attachment $A --itemid $P --session $SESSION --output $ATTACHFOLDER |  awk '{print $2}'|| EXIT=$? )  
+                mkdir -p $ATTACHFOLDER/$P || EXIT=$?
+                mv $SAVED_FILE $ATTACHFOLDER/$P || EXIT=$?
+                echo "$SAVED_FILE moved to $ATTACHFOLDER/$P" || EXIT=$?
         done
 done
 
