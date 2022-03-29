@@ -43,11 +43,22 @@ EXIT=0
 $BW_BINARY sync --session $SESSION || EXIT=$?
 $BW_BINARY export $PASSWORD --format json --session $SESSION --output $JSONFILE || EXIT=$?
 
+# Create folder where attachments end up
+if ! [ -d $ATTACHFOLDER ]; then
+        mkdir $ATTACHFOLDER || EXIT=$?
+fi
+
 # Goes through any item that contains attachments and downloads them
 for P in $PARENTS; do
+        if ! [ -d $ATTACHFOLDER/$P ]; then
+                mkdir $ATTACHFOLDER/$P || EXIT=$?
+        fi
         ATTACH=$($BW_BINARY get item $P --session $SESSION | jq -r .attachments[].id)
         for A in $ATTACH; do
-                $BW_BINARY get attachment $A --itemid $P --session $SESSION --output $ATTACHFOLDER || EXIT=$?
+                if ! [ -d $ATTACHFOLDER/$P/$A ]; then
+                        mkdir $ATTACHFOLDER/$P/$A || EXIT=$?
+                fi
+                $BW_BINARY get attachment $A --itemid $P --session $SESSION --output $ATTACHFOLDER/$P/$A/ || EXIT=$?
         done
 done
 
