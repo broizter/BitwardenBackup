@@ -35,7 +35,6 @@ fi
 # Variables used later in script. Not meant to be changed.
 SESSION=$("$BW_BINARY" unlock --raw "$PASSWORD")
 PARENTS=$("$BW_BINARY" list items --session "$SESSION" | jq -r '.[] | select(.attachments) | .id')
-ATTACHFOLDER="$OUTPUTFOLDER"/attachments/
 JSONFILE="$OUTPUTFOLDER"/vault.json
 EXIT=0
 
@@ -43,22 +42,13 @@ EXIT=0
 "$BW_BINARY" sync --session "$SESSION" || EXIT=$?
 "$BW_BINARY" export "$PASSWORD" --format json --session "$SESSION" --output "$JSONFILE" || EXIT=$?
 
-# Create folder where attachments end up
-if ! [ -d "$ATTACHFOLDER" ]; then
-        mkdir "$ATTACHFOLDER" || EXIT=$?
-fi
-
 # Goes through any item that contains attachments and downloads them
 for P in $PARENTS; do
-        if ! [ -d "$ATTACHFOLDER"/"$P" ]; then
-                mkdir "$ATTACHFOLDER"/"$P" || EXIT=$?
-        fi
         ATTACH=$("$BW_BINARY" get item "$P" --session "$SESSION" | jq -r .attachments[].id)
+        PARENTFOLDER=$(echo $P | cut -d - -f 1)
         for A in $ATTACH; do
-                if ! [ -d "$ATTACHFOLDER"/"$P"/"$A" ]; then
-                        mkdir "$ATTACHFOLDER"/"$P"/"$A" || EXIT=$?
-                fi
-                "$BW_BINARY" get attachment "$A" --itemid "$P" --session "$SESSION" --output "$ATTACHFOLDER"/"$P"/"$A"/ || EXIT=$?
+                ATTACHFOLDER=$(echo $A | cut -c1-8)
+                "$BW_BINARY" get attachment "$A" --itemid "$P" --session "$SESSION" --output "$OUTPUTFOLDER"/attachments/"$PARENTFOLDER"/"$ATTACHFOLDER"/ || EXIT=$?
         done
 done
 
