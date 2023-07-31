@@ -17,7 +17,7 @@ This script can be invoked manually, but it's designed to work without issues wh
 Download the latest release from GitHub for a stable and tested version.
 
 Required dependencies:
- * **bw** for accessing your Bitwarden vault. It's Bitwarden's official CLI utility that can be downloaded from https://github.com/bitwarden/cli
+ * **bw** for accessing your Bitwarden vault. It's Bitwarden's official CLI utility that can be downloaded from [https://github.com/bitwarden/cli](https://bitwarden.com/download/)
  * **jq** for parsing output so the script can find what to backup. If you run a Debian based distributions then it can be installed with  ```sudo apt install jq ```
  
  WARNING! There is no built in check in the script nor in "bw" that checks for existing files and they WILL get overwritten if a file with the same filename that you are downloading already exists.
