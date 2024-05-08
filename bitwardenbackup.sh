@@ -9,7 +9,7 @@ BW_BINARY=/path/to/bitwarden-cli/bin
 ############ END OF CONFIGURATION ################
 
 # Variables used later in script. Not meant to be changed.
-export BW_SESSION=$(bw unlock "$PASSWORD" --raw)
+export BW_SESSION=$("$BW_BINARY" unlock "$PASSWORD" --raw)
 PARENTS=$("$BW_BINARY" list items | jq -r '.[] | select(.attachments) | .id')
 JSONFILE="$OUTPUTFOLDER"/vault.json
 EXIT=0
