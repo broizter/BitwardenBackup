@@ -8,6 +8,12 @@ BW_BINARY=/path/to/bitwarden-cli/bin
 
 ############ END OF CONFIGURATION ################
 
+# Variables used later in script. Not meant to be changed.
+export BW_SESSION=$(bw unlock "$PASSWORD" --raw)
+PARENTS=$("$BW_BINARY" list items | jq -r '.[] | select(.attachments) | .id')
+JSONFILE="$OUTPUTFOLDER"/vault.json
+EXIT=0
+
 # Check if the output directory exists
 if ! [ -d "$OUTPUTFOLDER" ]; then
         echo "Output folder doesn't exist." 1>&2
@@ -32,25 +38,22 @@ if ! "$BW_BINARY" login --check &> /dev/null; then
         exit 1
 fi
 
-# Variables used later in script. Not meant to be changed.
-SESSION=$("$BW_BINARY" unlock --raw "$PASSWORD")
-PARENTS=$("$BW_BINARY" list items --session "$SESSION" | jq -r '.[] | select(.attachments) | .id')
-JSONFILE="$OUTPUTFOLDER"/vault.json
-EXIT=0
-
 # Detect changes to your Bitwarden vault and export passwords to json file
-"$BW_BINARY" sync --session "$SESSION" || EXIT=$?
-"$BW_BINARY" export "$PASSWORD" --format json --session "$SESSION" --output "$JSONFILE" || EXIT=$?
+"$BW_BINARY" sync || EXIT=$?
+"$BW_BINARY" export --format json --output "$JSONFILE" || EXIT=$?
 
 # Goes through any item that contains attachments and downloads them
 for P in $PARENTS; do
-        ATTACH=$("$BW_BINARY" get item "$P" --session "$SESSION" | jq -r .attachments[].id)
+        ATTACH=$("$BW_BINARY" get item "$P" | jq -r .attachments[].id)
         PARENTFOLDER=$(echo $P | cut -d - -f 1)
         for A in $ATTACH; do
                 ATTACHFOLDER=$(echo $A | cut -c1-8)
-                "$BW_BINARY" get attachment "$A" --itemid "$P" --session "$SESSION" --output "$OUTPUTFOLDER"/attachments/"$PARENTFOLDER"/"$ATTACHFOLDER"/ || EXIT=$?
+                "$BW_BINARY" get attachment "$A" --itemid "$P" --output "$OUTPUTFOLDER"/attachments/"$PARENTFOLDER"/"$ATTACHFOLDER"/ || EXIT=$?
         done
 done
+
+# Lock vault when done
+"$BW_BINARY" lock || EXIT=$?
 
 # Exits with zero code 0 unless anything went wrong
 exit $EXIT
